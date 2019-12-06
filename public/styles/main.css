@@ -1,5 +1,10 @@
+:root {
+    --mdc-theme-primary: #800000;
+}
+
 body {
     background: #DDDDDD;
+    margin: 0;
 }
 
 .navbar {
@@ -8,5 +13,43 @@ body {
 }
 
 .page-container {
-    margin-top: 70px;
+    padding-top: 70px;
+}
+
+.email,
+.password {
+    display: block;
+    width: 300px;
+    margin: 20px auto;
+}
+
+.button-container {
+    display: flex;
+    /* justify-content: flex-end; */
+
+    justify-content: space-between;
+    width: 300px;
+    margin: auto;
+}
+
+.button-container button {
+    margin: 3px;
+
+}
+
+#userInfo {
+    padding: 16px;
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.mdc-card__actions {
+    display: flex;
+    justify-content: flex-end;
+}
+#photoURL {
+    width:125px;
+    height: auto;
+    
 }
