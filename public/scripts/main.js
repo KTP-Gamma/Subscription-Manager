@@ -12,6 +12,7 @@ var rh = rh || {};
 rh.COLLECTION_SUBSCRIPTIONS = "Subscriptions";
 rh.KEY_NAME = "name";
 rh.KEY_COST = "cost";
+rh.KEY_TYPE = "type";
 rh.KEY_RENEWAL = "renewal";
 rh.KEY_LAST_TOUCHED = "lastTouched";
 rh.KEY_UID = "uid";
@@ -61,10 +62,11 @@ rh.FbSubscriptionManager = class {
 		this._unsubscribe();
 	}
 
-	add(name, cost) {
+	add(name, cost, type) {
 		this._ref.add({
 			[rh.KEY_NAME]: name,
 			[rh.KEY_COST]: cost,
+			[rh.KEY_TYPE]: type,
 			[rh.KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
 			[rh.KEY_UID]: rh.fbAuthManager.uid
 		}).then((docRef) => {
@@ -98,22 +100,27 @@ rh.ListPageController = class {
 			$("#inputQuote").trigger("focus");
 		});
 
+		var subType = "Monthly";
 		$("#submitAddSub").click((event) => {
 			const name = $("#inputName").val();
 			const cost = $("#inputCost").val();
+			const type = subType;
 			console.log("name:", name);
 			console.log("cost", cost);
-			rh.fbSubscriptionManager.add(name, cost);
+			console.log("type", type);
+			rh.fbSubscriptionManager.add(name, cost, type);
 			$("#inputName").val("");
 			$("#inputCost").val("");
 		});
 
 		$("#monthlyDropdown").click((event) => {
-			console.log("Clicked monthly")
+			console.log("Clicked monthly");
+			subType = "Monthly";
 		})
 
 		$("#annuallyDropdown").click((event) => {
-			console.log("Clicked annually")
+			console.log("Clicked annually");
+			subType = "Annually";
 		})
 	}
 
@@ -216,10 +223,11 @@ rh.FbSingleSubscriptionManager = class {
 		this._unsubscribe();
 	}
 
-	update(name, cost) {
+	update(name, cost, type) {
 		this._ref.update({
 			[rh.KEY_NAME]: name,
 			[rh.KEY_COST]: cost,
+			[rh.KEY_TYPE]: type,
 			[rh.KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now()
 		}).then((docRef) => {
 			console.log("The update is complete");
@@ -236,6 +244,10 @@ rh.FbSingleSubscriptionManager = class {
 	get cost() {
 		return this._document.get(rh.KEY_COST);
 	}
+
+	get type() {
+		return this._document.get(rh.KEY_TYPE);
+	}
 }
 
 rh.DetailPageController = class {
@@ -245,13 +257,27 @@ rh.DetailPageController = class {
 			$("#inputQuote").val(rh.fbSingleSubscriptionManager.quote);
 			$("#inputMovie").val(rh.fbSingleSubscriptionManager.movie);
 		});
+
 		$("#editSub").on("shown.bs.modal", function (e) {
 			$("#inputQuote").trigger("focus");
 		});
+
+		var subTypeEdit = "Monthly";
+		$("#monthlyDropdownEdit").click((event) => {
+			console.log("Clicked monthly");
+			subTypeEdit = "Monthly";
+		})
+
+		$("#annuallyDropdownEdit").click((event) => {
+			console.log("Clicked annually");
+			subTypeEdit = "Annually";
+		})
+
 		$("#submitEditSub").click((event) => {
 			const name = $("#inputQuote").val();
 			const cost = $("#inputMovie").val();
-			rh.fbSingleSubscriptionManager.update(name, cost);
+			const type = subTypeEdit;
+			rh.fbSingleSubscriptionManager.update(name, cost, type);
 		});
 
 		$("#delete").click((event) => {
