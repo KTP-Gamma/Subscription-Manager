@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="styles/main.css">
+  <title>Subscription Manager</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">Subscriptions</a>    
+  <div class="btn-group">
+    <span data-toggle="dropdown">
+      <i class="material-icons">menu</i>
+    </span>
+    <div class="dropdown-menu dropdown-menu-right">
+      <button id="" class="dropdown-item" type="button">Show Tracker</button>
+      <button id="menuSignOut" class="dropdown-item" type="button">Sign out</button>
+    </div>
+  </div>
+  </nav>
+  <!-- + looking icon-->
+  <div id="fab" data-toggle="modal" data-target="#addSubDialog">
+    <img src="images/fab.png" alt="fab">
+  </div>
+
+  <div id="list-page" class="container page-container">
+    <div class="row justify-content-center">
+      <div id="subscriptionListContainer" class="col col-md-8">
+        <ul id="subList" class="list-group">
+          <!--ALL THE QUOTES GO HERE-->
+          <!-- <li id="quoteCardTemplate" class="invisible quote-card list-group-item">
+            <div class="quote-card-quote"></div>
+            <div class="quote-card-movie text-right blockquote-footer">Loading</div>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="addSubDialog" tabindex="-1" role="dialog" aria-labelledby="add sub"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add a subscription</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-2 mt-sm-2 control-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" id="inputName" class="form-control" placeholder="Name movie subscription">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputCost" class="col-sm-2 mt-sm-2 control-label">Cost:</label>
+            <div class="col-sm-10">
+              <input type="text" id="inputCost" class="form-control" placeholder="Cost of the subscription">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">CANCEL</button>
+          <button type="button" id="submitAddSub" class="btn btn-outline-light" data-dismiss="modal">CREATE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/popper.min.js"></script>
+  <script src="scripts/bootstrap.min.js"></script>
+  <script src="/__/firebase/6.3.5/firebase-app.js"></script>
+  <script src="/__/firebase/6.3.5/firebase-auth.js"></script>
+  <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
+  <script src="/__/firebase/init.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+
+</html>

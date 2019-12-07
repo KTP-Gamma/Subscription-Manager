@@ -4,38 +4,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
   <link rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+  <link rel="stylesheet" href="styles/bootstrap.min.css">
   <link rel="stylesheet" href="styles/main.css">
-  <title>KTP</title>
+  <title>Subscription Manager</title>
 </head>
 
 <body>
-
   <nav class="navbar navbar-dark fixed-top">
     <a class="navbar-brand" href="#">Subscription Manager</a>
   </nav>
-  <div id="main-page" class="page-container">
-    <div id="firebaseui-auth-container"></div>
 
+  <div id="login-page" class="container page-container">
+      <div id="firebaseui-auth-container"></div>   
+ 
   </div>
-
-
-  <!-- <header class="mdc-top-app-bar">
-    <div class="mdc-top-app-bar__row">
-      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-        <span class="mdc-top-app-bar__title">Subscription Manager</span>
-      </section>
-    </div>
-  </header> -->
 
 
 
   <script src="scripts/jquery.min.js"></script>
-  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <script src="scripts/popper.min.js"></script>
+  <script src="scripts/bootstrap.min.js"></script>
   <script src="/__/firebase/6.3.5/firebase-app.js"></script>
   <script src="/__/firebase/6.3.5/firebase-auth.js"></script>
+  <script src="/__/firebase/6.3.5/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
   <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
   <script src="scripts/main.js"></script>
