@@ -28,6 +28,7 @@ rh.Subscription = class {
 		this.cost = cost;
 	}
 }
+
 rh.FbSubscriptionManager = class {
 	constructor(uid) {
 		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS);
@@ -132,13 +133,13 @@ rh.ListPageController = class {
 		const $newCard = $(`
 		  <li id="${subscription.id}" class="quote-card list-group-item">
 		     <div class="">${subscription.name}</div>
-		     <div class="text-right blockquote-footer">${subscription.cost}</div>
+		     <div class="text-right">Cost: ${subscription.cost}$</div>
 	      </li>`);
-		// $newCard.click((event) => {
-		// 	console.log("You have clicked", movieQuote);
-		// 	// rh.storage.setMovieQuoteId(movieQuote.id);
-		// 	window.location.href = `/moviequote.html?id=${movieQuote.id}`;
-		// });
+		$newCard.click((event) => {
+			console.log("You have clicked", subscription);
+			// rh.storage.setMovieQuoteId(movieQuote.id);
+			window.location.href = `/moviequote.html?id=${subscription.id}`;
+		});
 		return $newCard;
 	}
 }
@@ -184,6 +185,85 @@ rh.LoginPageController = class {
 			],
 		};
 		ui.start("#firebaseui-auth-container", uiConfig);
+	}
+}
+
+rh.FbSingleMovieQuoteManager = class {
+	constructor(subscriptionId) {
+		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS).doc(subscriptionId);
+		this._document = {};
+		this._unsubscribe = null;
+	}
+
+	beginListening(changeListener) {
+		console.log("Listening for this movie quote");
+		this._unsubscribe = this._ref.onSnapshot((doc) => {
+			if (doc.exists) {
+				this._document = doc;
+				console.log('doc.data() :', doc.data());
+				if (changeListener) {
+					changeListener();
+				}
+			} else {
+				// This document does not exist (or has been deleted)
+				//window.location.href = "/";
+			}
+		});
+	}
+
+	stopListening() {
+		this._unsubscribe();
+	}
+	
+	update(name, cost) {
+		this._ref.update({
+			[rh.KEY_NAME]: name,
+			[rh.KEY_COST]: cost,
+			[rh.KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now()
+		}).then((docRef) => {
+			console.log("The update is complete");
+		});
+	}
+	delete() {
+		return this._ref.delete();
+	}
+
+	get name() {
+		return this._document.get(rh.KEY_NAME);
+	}
+
+	get cost() {
+		return this._document.get(rh.KEY_COST);
+	}
+}
+
+rh.DetailPageController = class {
+	constructor() {
+		rh.fbSubscriptionManager.beginListening(this.updateView.bind(this));
+		$("#editQuoteDialog").on("show.bs.modal", function (e) {
+			$("#inputQuote").val(rh.fbSubscriptionManager.quote);
+			$("#inputMovie").val(rh.fbSubscriptionManager.movie);
+		});
+		$("#editQuoteDialog").on("shown.bs.modal", function (e) {
+			$("#inputQuote").trigger("focus");
+		});
+		$("#submitEditQuote").click((event) => {
+			const quote = $("#inputQuote").val();
+			const movie = $("#inputMovie").val();
+			rh.fbSingleMovieQuoteManager.update(quote, movie);
+		});
+
+		$("#deleteQuote").click((event) => {
+			rh.fbSingleMovieQuoteManager.delete().then(() => {
+				window.location.href = "/";
+			});
+		});
+
+	}
+
+	updateView() {
+		$("#cardQuote").html(rh.fbSingleMovieQuoteManager.quote);
+		$("#cardMovie").html(rh.fbSingleMovieQuoteManager.movie);
 	}
 }
 
