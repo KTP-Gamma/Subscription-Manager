@@ -362,13 +362,14 @@ rh.initializePage = function () {
 	var urlParams = new URLSearchParams(window.location.search);
 	console.log(urlParams);
 	if ($("#list-page").length) {
+		rh.GLOBAL_UID = this.fbAuthManager._user.uid;
 		console.log("On the main page");
 		const urlUid = urlParams.get('uid');
 		//console.log(this.fbAuthManager)
-		rh.GLOBAL_UID = this.fbAuthManager._user.uid
 		rh.fbSubscriptionManager = new rh.FbSubscriptionManager(rh.GLOBAL_UID);
 		new rh.ListPageController();
 	} else if ($("#detail-page").length) {
+		rh.GLOBAL_UID = this.fbAuthManager._user.uid;
 		console.log("On the detail page");
 		// const movieQuoteId = rh.storage.getMovieQuoteId();
 		// var urlParams = new URLSearchParams(window.location.search);
@@ -384,6 +385,7 @@ rh.initializePage = function () {
 		console.log("On the login Page");
 		new rh.LoginPageController();
 	} else if ($("#chart-page").length) {
+		rh.GLOBAL_UID = this.fbAuthManager._user.uid;
 		console.log("On the chart page");
 		new rh.ChartPageController();
 	}
