@@ -245,7 +245,7 @@ rh.DetailPageController = class {
 			$("#inputQuote").val(rh.fbSingleSubscriptionManager.quote);
 			$("#inputMovie").val(rh.fbSingleSubscriptionManager.movie);
 		});
-		$("#editSubDialog").on("shown.bs.modal", function (e) {
+		$("#editSub").on("shown.bs.modal", function (e) {
 			$("#inputQuote").trigger("focus");
 		});
 		$("#submitEditSub").click((event) => {
@@ -259,17 +259,22 @@ rh.DetailPageController = class {
 				window.location.href = "/";
 			});
 		});
+
+		$("#menuSignOut").click((event) => {
+			rh.fbAuthManager.signOut();
+		});
+
 	}
 
 	updateView() {
 		$("#cardName").html(rh.fbSingleSubscriptionManager.name);
-		$("#cardCost").html(rh.fbSingleSubscriptionManager.cost);
+		$("#cardCost").html(`Cost: ${rh.fbSingleSubscriptionManager.cost}$`);
 
 		//Show edit and delete if allowed
-		if (rh.fbSingleSubscriptionManager.uid == rh.fbAuthManager.uid) {
-			$("#menuEdit").show();
-			$("#menuDelete").show();
-		}
+		// if (rh.fbSingleSubscriptionManager.uid == rh.fbAuthManager.uid) {
+		// 	$("#menuEdit").show();
+		// 	$("#menuDelete").show();
+		// }
 	}
 }
 
