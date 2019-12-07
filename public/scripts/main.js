@@ -193,6 +193,34 @@ function updateChartVals() {
     console.log(total);
 }
 
+function renderPieChart(values) {
+
+    var chart = new CanvasJS.Chart("pieChart", {
+        backgroundColor: "#DDDDDD",
+        colorSet: "colorSet2",
+
+        title: {
+            text: "Subscription Breakdown",
+            fontFamily: "Comic Sans MS",
+            fontSize: 25,
+            fontWeight: "normal",
+        },
+        animationEnabled: true,
+        data: [{
+            indexLabelFontSize: 15,
+            indexLabelFontFamily: "Comic Sans MS",
+            indexLabelFontColor: "darkgrey",
+            indexLabelLineColor: "darkgrey",
+            indexLabelPlacement: "outside",
+            type: "pie",
+            showInLegend: false,
+            toolTipContent: "<strong>#percent%</strong>",
+            dataPoints: values
+        }]
+    });
+    chart.render();
+}
+
 rh.FbAuthManager = class {
 	constructor() {
 		this._user = null;
@@ -387,37 +415,11 @@ rh.initializePage = function () {
 	} else if ($("#chart-page").length) {
 		rh.GLOBAL_UID = this.fbAuthManager._user.uid;
 		console.log("On the chart page");
+		const urlUid = urlParams.get('uid');
+		rh.fbSingleSubscriptionManager = new rh.FbSubscriptionManager(urlUid);
 		new rh.ChartPageController();
 	}
 
-}
-
-function renderPieChart(values) {
-
-    var chart = new CanvasJS.Chart("pieChart", {
-        backgroundColor: "#DDDDDD",
-        colorSet: "colorSet2",
-
-        title: {
-            text: "Subscription Breakdown",
-            fontFamily: "Comic Sans MS",
-            fontSize: 25,
-            fontWeight: "normal",
-        },
-        animationEnabled: true,
-        data: [{
-            indexLabelFontSize: 15,
-            indexLabelFontFamily: "Comic Sans MS",
-            indexLabelFontColor: "darkgrey",
-            indexLabelLineColor: "darkgrey",
-            indexLabelPlacement: "outside",
-            type: "pie",
-            showInLegend: false,
-            toolTipContent: "<strong>#percent%</strong>",
-            dataPoints: values
-        }]
-    });
-    chart.render();
 }
 
 /* Main */
