@@ -1,10 +1,5 @@
-:root {
-    --mdc-theme-primary: #800000;
-}
-
 body {
     background: #DDDDDD;
-    margin: 0;
 }
 
 .navbar {
@@ -13,43 +8,70 @@ body {
 }
 
 .page-container {
-    padding-top: 70px;
+    margin-top: 70px;
 }
 
-.email,
-.password {
+#fab {
+    position: fixed;
+    bottom: 4px;
+    right: 0px;
+    z-index: 999;
+}
+
+#fab:active {
+    transform: translateY(4px);
+    opacity: 0.8;
+}
+
+.btn-outline-light {
+    color: #800000;
+    font-weight: bold;
+}
+
+.modal-header {
+    border: none;
+    padding-bottom: 0;
+}
+
+.modal-footer {
+    border: none;
+    padding-top: 0;
+}
+
+.quote-card-quote,
+.quote-card-movie {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.quote-card-quote {
+    font-size: 1.5em;
+}
+
+.quote-card-movie {
+    font-size: 1.2em;
+}
+
+.quote-card {
+    margin: 2px;
+}
+
+[data-toggle="dropdown"] {
+    cursor: pointer;
+}
+
+#roselogo {
     display: block;
-    width: 300px;
-    margin: 20px auto;
-}
-
-.button-container {
-    display: flex;
-    /* justify-content: flex-end; */
-
-    justify-content: space-between;
-    width: 300px;
-    margin: auto;
-}
-
-.button-container button {
-    margin: 3px;
-
-}
-
-#userInfo {
-    padding: 16px;
     width: 90%;
-    max-width: 600px;
-    margin: 40px auto;
+    max-width: 400px;
 }
 
-.mdc-card__actions {
-    display: flex;
-    justify-content: flex-end;
+#rosefireButton {
+    display: block;
+    margin-top:60px;
+    background: #800000;
 }
-#photoURL {
-    width:125px;
-    height: auto;
-    
+
+.initially-hidden {
+    display: none;
 }
