@@ -7,14 +7,19 @@
 
 /** namespace. */
 var rh = rh || {};
+var db = firebase.firestore();
+
 
 /** globals */
+rh.COLLECTION_USER = "UsersData";
 rh.COLLECTION_SUBSCRIPTIONS = "Subscriptions";
 rh.KEY_NAME = "name";
 rh.KEY_COST = "cost";
+rh.KEY_TYPE = "type";
 rh.KEY_RENEWAL = "renewal";
 rh.KEY_LAST_TOUCHED = "lastTouched";
 rh.KEY_UID = "uid";
+rh.GLOBAL_UID = "";
 
 rh.ROSEFIRE_REGISTRY_TOKEN = "d1dc1ee8-f6ee-4b3c-b195-fa756042fdce";
 
@@ -32,7 +37,7 @@ rh.Subscription = class {
 
 rh.FbSubscriptionManager = class {
 	constructor(uid) {
-		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS);
+		this._ref = db.collection(rh.COLLECTION_USER).doc(uid).collection(rh.COLLECTION_SUBSCRIPTIONS);
 		this._documentSnapshots = [];
 		this._unsubscribe = null;
 		this._uid = uid;
@@ -61,10 +66,11 @@ rh.FbSubscriptionManager = class {
 		this._unsubscribe();
 	}
 
-	add(name, cost) {
+	add(name, cost, type) {
 		this._ref.add({
 			[rh.KEY_NAME]: name,
 			[rh.KEY_COST]: cost,
+			[rh.KEY_TYPE]: type,
 			[rh.KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now(),
 			[rh.KEY_UID]: rh.fbAuthManager.uid
 		}).then((docRef) => {
@@ -98,22 +104,27 @@ rh.ListPageController = class {
 			$("#inputQuote").trigger("focus");
 		});
 
+		var subType = "Monthly";
 		$("#submitAddSub").click((event) => {
 			const name = $("#inputName").val();
 			const cost = $("#inputCost").val();
+			const type = subType;
 			console.log("name:", name);
 			console.log("cost", cost);
-			rh.fbSubscriptionManager.add(name, cost);
+			console.log("type", type);
+			rh.fbSubscriptionManager.add(name, cost, type);
 			$("#inputName").val("");
 			$("#inputCost").val("");
 		});
 
 		$("#monthlyDropdown").click((event) => {
-			console.log("Clicked monthly")
+			console.log("Clicked monthly");
+			subType = "Monthly";
 		})
 
 		$("#annuallyDropdown").click((event) => {
-			console.log("Clicked annually")
+			console.log("Clicked annually");
+			subType = "Annually";
 		})
 	}
 
@@ -191,7 +202,7 @@ rh.LoginPageController = class {
 
 rh.FbSingleSubscriptionManager = class {
 	constructor(subscriptionId) {
-		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS).doc(subscriptionId);
+		this._ref = db.collection(rh.COLLECTION_USER).doc(rh.GLOBAL_UID).collection(rh.COLLECTION_SUBSCRIPTIONS).doc(subscriptionId);
 		this._document = {};
 		this._unsubscribe = null;
 	}
@@ -208,6 +219,7 @@ rh.FbSingleSubscriptionManager = class {
 			} else {
 				// This document does not exist (or has been deleted)
 				//window.location.href = "/";
+				console.log('Document does not exits',doc);
 			}
 		});
 	}
@@ -216,10 +228,11 @@ rh.FbSingleSubscriptionManager = class {
 		this._unsubscribe();
 	}
 
-	update(name, cost) {
+	update(name, cost, type) {
 		this._ref.update({
 			[rh.KEY_NAME]: name,
 			[rh.KEY_COST]: cost,
+			[rh.KEY_TYPE]: type,
 			[rh.KEY_LAST_TOUCHED]: firebase.firestore.Timestamp.now()
 		}).then((docRef) => {
 			console.log("The update is complete");
@@ -236,6 +249,10 @@ rh.FbSingleSubscriptionManager = class {
 	get cost() {
 		return this._document.get(rh.KEY_COST);
 	}
+
+	get type() {
+		return this._document.get(rh.KEY_TYPE);
+	}
 }
 
 rh.DetailPageController = class {
@@ -245,13 +262,27 @@ rh.DetailPageController = class {
 			$("#inputQuote").val(rh.fbSingleSubscriptionManager.quote);
 			$("#inputMovie").val(rh.fbSingleSubscriptionManager.movie);
 		});
+
 		$("#editSub").on("shown.bs.modal", function (e) {
 			$("#inputQuote").trigger("focus");
 		});
+
+		var subTypeEdit = "Monthly";
+		$("#monthlyDropdownEdit").click((event) => {
+			console.log("Clicked monthly");
+			subTypeEdit = "Monthly";
+		})
+
+		$("#annuallyDropdownEdit").click((event) => {
+			console.log("Clicked annually");
+			subTypeEdit = "Annually";
+		})
+
 		$("#submitEditSub").click((event) => {
 			const name = $("#inputQuote").val();
 			const cost = $("#inputMovie").val();
-			rh.fbSingleSubscriptionManager.update(name, cost);
+			const type = subTypeEdit;
+			rh.fbSingleSubscriptionManager.update(name, cost, type);
 		});
 
 		$("#delete").click((event) => {
@@ -295,7 +326,9 @@ rh.initializePage = function () {
 	if ($("#list-page").length) {
 		console.log("On the main page");
 		const urlUid = urlParams.get('uid');
-		rh.fbSubscriptionManager = new rh.FbSubscriptionManager(urlUid);
+		//console.log(this.fbAuthManager)
+		rh.GLOBAL_UID = this.fbAuthManager._user.uid
+		rh.fbSubscriptionManager = new rh.FbSubscriptionManager(rh.GLOBAL_UID);
 		new rh.ListPageController();
 	} else if ($("#detail-page").length) {
 		console.log("On the detail page");

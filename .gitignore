@@ -6,6 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 
+# IDE stuffs
+.idea/
+
 # Firebase cache
 .firebase/
 

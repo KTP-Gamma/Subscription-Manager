@@ -29,12 +29,13 @@ var dict0 = {
 function makeUL(array) {
 // Create the list element:
 var list = document.createElement('ul');
-list.className = "list-group list-group-flush";
+//list.className = "list-group list-group-flush";
+list.textContent = "Subscription Name"
 
 for(var i = 0; i < array.length; i++) {
     // Create the list item:
     var item = document.createElement('li');
-    item.className = "list-group-item";
+    //item.className = "list-group-item";
     // Set its contents:
     item.appendChild(document.createTextNode(array[i]));
 
