@@ -3,6 +3,29 @@ var options = [
     set1 = ['Netflix','Spotify','iCloud']
 ];
 
+var dict0 = {
+    "Netflix": {
+        "SubName" : "Netflix",
+        "SubPrice" : "10",
+        "SubDuration" : "10",
+        "StartDate" : "10/2019"
+    },
+    
+    "Spotify": {
+        "SubName" : "Spotify",
+        "SubPrice" : "5",
+        "SubDuration" : "12",
+        "StartDate" : "5/2019"
+    },
+
+    "Twitch": {
+        "SubName" : "Twitch",
+        "SubPrice" : "5",
+        "SubDuration" : "1",
+        "StartDate" : "8/2019"
+    }
+}
+
 function makeUL(array) {
 // Create the list element:
 var list = document.createElement('ul');
