@@ -152,6 +152,43 @@ rh.ListPageController = class {
 	}
 }
 
+rh.ChartPageController = class {
+	constructor() {
+		rh.fbSubscriptionManager.beginListening(this.updateView.bind(this));
+
+		$("#menuSignOut").click((event) => {
+			rh.fbAuthManager.signOut();
+		})
+
+	}
+	
+	updateView() {
+		updateChartVals();
+		renderPieChart(pieChartValues);
+	}
+}
+
+var pieChartValues = [{
+    y: 39.16,
+    exploded: true,
+    indexLabel: "Hello",
+    color: "#1f77b4"
+}
+];
+
+function updateChartVals() {
+    var curSub;
+    var subs = [];
+	var total = 0;
+	debugger;
+    for (let i = 0; i < rh.fbSubscriptionManager.length; i++) {
+        curSub = rh.fbSubscriptionManager.getSubscriptionAtIndex(k);
+        subs.push(curSub);
+        total += curSub.cost;
+    }
+    console.log(total);
+}
+
 rh.FbAuthManager = class {
 	constructor() {
 		this._user = null;
@@ -295,6 +332,7 @@ rh.DetailPageController = class {
 	updateView() {
 		$("#cardName").html(rh.fbSingleSubscriptionManager.name);
 		$("#cardCost").html(`Cost: ${rh.fbSingleSubscriptionManager.cost}$`);
+		$("#cardType").html(`Type: ${rh.fbSingleSubscriptionManager.type}`);
 
 		//Show edit and delete if allowed
 		// if (rh.fbSingleSubscriptionManager.uid == rh.fbAuthManager.uid) {
@@ -338,9 +376,41 @@ rh.initializePage = function () {
 	} else if ($("#login-page").length) {
 		console.log("On the login Page");
 		new rh.LoginPageController();
+	} else if ($("#chart-page").length) {
+		console.log("On the chart page");
+		new rh.ChartPageController();
 	}
 
 }
+
+function renderPieChart(values) {
+
+    var chart = new CanvasJS.Chart("pieChart", {
+        backgroundColor: "#DDDDDD",
+        colorSet: "colorSet2",
+
+        title: {
+            text: "Subscription Breakdown",
+            fontFamily: "Comic Sans MS",
+            fontSize: 25,
+            fontWeight: "normal",
+        },
+        animationEnabled: true,
+        data: [{
+            indexLabelFontSize: 15,
+            indexLabelFontFamily: "Comic Sans MS",
+            indexLabelFontColor: "darkgrey",
+            indexLabelLineColor: "darkgrey",
+            indexLabelPlacement: "outside",
+            type: "pie",
+            showInLegend: false,
+            toolTipContent: "<strong>#percent%</strong>",
+            dataPoints: values
+        }]
+    });
+    chart.render();
+}
+
 /* Main */
 $(document).ready(() => {
 	console.log("Ready");
