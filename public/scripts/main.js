@@ -20,6 +20,7 @@ rh.ROSEFIRE_REGISTRY_TOKEN = "d1dc1ee8-f6ee-4b3c-b195-fa756042fdce";
 
 rh.fbSubscriptionManager = null;
 rh.fbAuthManager = null;
+rh.fbSingleSubscriptionManager = null;
 
 rh.Subscription = class {
 	constructor(id, name, cost) {
@@ -88,7 +89,7 @@ rh.FbSubscriptionManager = class {
 rh.ListPageController = class {
 	constructor() {
 		rh.fbSubscriptionManager.beginListening(this.updateView.bind(this));
-	
+
 		$("#menuSignOut").click((event) => {
 			rh.fbAuthManager.signOut();
 		});
@@ -130,7 +131,7 @@ rh.ListPageController = class {
 		$newCard.click((event) => {
 			console.log("You have clicked", subscription);
 			// rh.storage.setMovieQuoteId(movieQuote.id);
-			window.location.href = `/moviequote.html?id=${subscription.id}`;
+			window.location.href = `/detail.html?id=${subscription.id}`;
 		});
 		return $newCard;
 	}
@@ -180,7 +181,7 @@ rh.LoginPageController = class {
 	}
 }
 
-rh.FbSingleMovieQuoteManager = class {
+rh.FbSingleSubscriptionManager = class {
 	constructor(subscriptionId) {
 		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS).doc(subscriptionId);
 		this._document = {};
@@ -206,7 +207,7 @@ rh.FbSingleMovieQuoteManager = class {
 	stopListening() {
 		this._unsubscribe();
 	}
-	
+
 	update(name, cost) {
 		this._ref.update({
 			[rh.KEY_NAME]: name,
@@ -231,31 +232,36 @@ rh.FbSingleMovieQuoteManager = class {
 
 rh.DetailPageController = class {
 	constructor() {
-		rh.fbSubscriptionManager.beginListening(this.updateView.bind(this));
-		$("#editQuoteDialog").on("show.bs.modal", function (e) {
-			$("#inputQuote").val(rh.fbSubscriptionManager.quote);
-			$("#inputMovie").val(rh.fbSubscriptionManager.movie);
+		rh.fbSingleSubscriptionManager.beginListening(this.updateView.bind(this));
+		$("#editSubDialog").on("show.bs.modal", function (e) {
+			$("#inputQuote").val(rh.fbSingleSubscriptionManager.quote);
+			$("#inputMovie").val(rh.fbSingleSubscriptionManager.movie);
 		});
-		$("#editQuoteDialog").on("shown.bs.modal", function (e) {
+		$("#editSubDialog").on("shown.bs.modal", function (e) {
 			$("#inputQuote").trigger("focus");
 		});
-		$("#submitEditQuote").click((event) => {
-			const quote = $("#inputQuote").val();
-			const movie = $("#inputMovie").val();
-			rh.fbSingleMovieQuoteManager.update(quote, movie);
+		$("#submitEditSub").click((event) => {
+			const name = $("#inputQuote").val();
+			const cost = $("#inputMovie").val();
+			rh.fbSingleSubscriptionManager.update(name, cost);
 		});
 
-		$("#deleteQuote").click((event) => {
-			rh.fbSingleMovieQuoteManager.delete().then(() => {
+		$("#deleteSub").click((event) => {
+			rh.fbSingleSubscriptionManager.delete().then(() => {
 				window.location.href = "/";
 			});
 		});
-
 	}
 
 	updateView() {
-		$("#cardQuote").html(rh.fbSingleMovieQuoteManager.quote);
-		$("#cardMovie").html(rh.fbSingleMovieQuoteManager.movie);
+		$("#cardName").html(rh.fbSingleSubscriptionManager.name);
+		$("#cardCost").html(rh.fbSingleSubscriptionManager.cost);
+
+		//Show edit and delete if allowed
+		if (rh.fbSingleSubscriptionManager.uid == rh.fbAuthManager.uid) {
+			$("#menuEdit").show();
+			$("#menuDelete").show();
+		}
 	}
 }
 
@@ -278,6 +284,18 @@ rh.initializePage = function () {
 		const urlUid = urlParams.get('uid');
 		rh.fbSubscriptionManager = new rh.FbSubscriptionManager(urlUid);
 		new rh.ListPageController();
+	} else if ($("#detail-page").length) {
+		console.log("On the detail page");
+		// const movieQuoteId = rh.storage.getMovieQuoteId();
+		// var urlParams = new URLSearchParams(window.location.search);
+		const subId = urlParams.get('id');
+		if (subId) {
+			rh.fbSingleSubscriptionManager = new rh.FbSingleSubscriptionManager(subId);
+			new rh.DetailPageController();
+		} else {
+			console.log("Missing a id");
+			// window.location.href = "/";
+		}
 	} else if ($("#login-page").length) {
 		console.log("On the login Page");
 		new rh.LoginPageController();

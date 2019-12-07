@@ -18,10 +18,10 @@
                 <i class="material-icons">menu</i>
             </span>
             <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button" data-target="#editSubDialog"
-                    data-toggle="modal">Edit</button>
-                <button class="dropdown-item" type="button" data-target="#deleteSubDialog"
-                    data-toggle="modal">Delete</button>
+                <button id="menuEdit" class="initially-hidden dropdown-item" type="button"
+                    data-target="#editQuoteDialog" data-toggle="modal">Edit</button>
+                <button id="menuDelete" class="initially-hidden dropdown-item" type="button"
+                    data-target="#deleteQuoteDialog" data-toggle="modal">Delete</button>
                 <button id="menuSignOut" class="dropdown-item" type="button">Sign out</button>
             </div>
         </div>
@@ -31,8 +31,8 @@
         <div class="row justify-content-center">
             <div class="card col-11 mt-4 col-md-8 mt-md-5">
                 <div class="card-body">
-                    <h5 id="cardQuote" class="card-title">Loading...</h5>
-                    <h6 id="cardMovie" class="text-muted text-right"></h6>
+                    <h5 id="cardName" class="card-title">Loading...</h5>
+                    <h6 id="cardCost" class="text-muted text-right"></h6>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">CANCEL</button>
-                    <button type="button" id="submitEditQuote" class="btn btn-outline-light"
+                    <button type="button" id="submitEditSub" class="btn btn-outline-light"
                         data-dismiss="modal">SAVE</button>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">CANCEL</button>
-                    <button type="button" id="deleteQuote" class="btn btn-outline-light"
+                    <button type="button" id="deleteSub" class="btn btn-outline-light"
                         data-dismiss="modal">DELETE</button>
                 </div>
             </div>
