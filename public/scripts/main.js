@@ -254,7 +254,7 @@ rh.DetailPageController = class {
 			rh.fbSingleSubscriptionManager.update(name, cost);
 		});
 
-		$("#deleteSub").click((event) => {
+		$("#delete").click((event) => {
 			rh.fbSingleSubscriptionManager.delete().then(() => {
 				window.location.href = "/";
 			});
