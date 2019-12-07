@@ -107,6 +107,14 @@ rh.ListPageController = class {
 			$("#inputName").val("");
 			$("#inputCost").val("");
 		});
+
+		$("#monthlyDropdown").click((event) => {
+			console.log("Clicked monthly")
+		})
+
+		$("#annuallyDropdown").click((event) => {
+			console.log("Clicked annually")
+		})
 	}
 
 	updateView() {
