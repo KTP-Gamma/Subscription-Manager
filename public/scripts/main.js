@@ -7,8 +7,11 @@
 
 /** namespace. */
 var rh = rh || {};
+var db = firebase.firestore();
+
 
 /** globals */
+rh.COLLECTION_USER = "UsersData";
 rh.COLLECTION_SUBSCRIPTIONS = "Subscriptions";
 rh.KEY_NAME = "name";
 rh.KEY_COST = "cost";
@@ -16,6 +19,7 @@ rh.KEY_TYPE = "type";
 rh.KEY_RENEWAL = "renewal";
 rh.KEY_LAST_TOUCHED = "lastTouched";
 rh.KEY_UID = "uid";
+rh.GLOBAL_UID = "";
 
 rh.ROSEFIRE_REGISTRY_TOKEN = "d1dc1ee8-f6ee-4b3c-b195-fa756042fdce";
 
@@ -33,7 +37,7 @@ rh.Subscription = class {
 
 rh.FbSubscriptionManager = class {
 	constructor(uid) {
-		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS);
+		this._ref = db.collection(rh.COLLECTION_USER).doc(uid).collection(rh.COLLECTION_SUBSCRIPTIONS);
 		this._documentSnapshots = [];
 		this._unsubscribe = null;
 		this._uid = uid;
@@ -263,7 +267,7 @@ rh.LoginPageController = class {
 
 rh.FbSingleSubscriptionManager = class {
 	constructor(subscriptionId) {
-		this._ref = firebase.firestore().collection(rh.COLLECTION_SUBSCRIPTIONS).doc(subscriptionId);
+		this._ref = db.collection(rh.COLLECTION_USER).doc(rh.GLOBAL_UID).collection(rh.COLLECTION_SUBSCRIPTIONS).doc(subscriptionId);
 		this._document = {};
 		this._unsubscribe = null;
 	}
@@ -280,6 +284,7 @@ rh.FbSingleSubscriptionManager = class {
 			} else {
 				// This document does not exist (or has been deleted)
 				//window.location.href = "/";
+				console.log('Document does not exits',doc);
 			}
 		});
 	}
@@ -387,7 +392,9 @@ rh.initializePage = function () {
 	if ($("#list-page").length) {
 		console.log("On the main page");
 		const urlUid = urlParams.get('uid');
-		rh.fbSubscriptionManager = new rh.FbSubscriptionManager(urlUid);
+		//console.log(this.fbAuthManager)
+		rh.GLOBAL_UID = this.fbAuthManager._user.uid
+		rh.fbSubscriptionManager = new rh.FbSubscriptionManager(rh.GLOBAL_UID);
 		new rh.ListPageController();
 	} else if ($("#detail-page").length) {
 		console.log("On the detail page");
